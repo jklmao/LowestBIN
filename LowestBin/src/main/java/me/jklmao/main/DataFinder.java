@@ -13,6 +13,7 @@ import net.hypixel.api.reply.skyblock.SkyBlockAuctionsReply;
 
 public class DataFinder {
 
+	// Phantom removed
 	private List<String> itemNames = new ArrayList<>();
 	private List<Integer> itemPrices = new ArrayList<>();
 	private final String caduceus = "Caduceus Mender Skin";
@@ -36,7 +37,6 @@ public class DataFinder {
 	private final String babyEnder = "Baby Ender Dragon Skin";
 	private final String babyBlue = "Baby Blue Ender Dragon Skin";
 	private final String pirateBomb = "Pirate Bomb Power Orb Skin";
-	private final String phantom = "Phantom Investment";
 	private final String securaty = "SecuRaty Guard Rat Skin";
 	private final String ninjaRat = "Ninja Rat Skin";
 	private final String pirateRat = "PiRate Rat Skin";
@@ -134,7 +134,6 @@ public class DataFinder {
 		itemNames.add(mrClaws);
 		itemNames.add(ninjaRat);
 		itemNames.add(oni);
-		itemNames.add(phantom);
 		itemNames.add(talisMan);
 
 		Collections.sort(itemNames);
@@ -142,10 +141,11 @@ public class DataFinder {
 
 	private void allPrices() {
 
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < 29; i++) {
 			itemPrices.add(Integer.MAX_VALUE);
 		}
 
 	}
 
 }
+
