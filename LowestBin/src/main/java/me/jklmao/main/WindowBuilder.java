@@ -18,6 +18,7 @@ import javax.swing.JTable;
 
 public class WindowBuilder {
 
+	// Code Improvement
 	private JFrame frame;
 	private JTable table;
 	private JScrollPane scrollPane;
@@ -25,7 +26,7 @@ public class WindowBuilder {
 	private JLabel totalMadeText;
 	private JLabel netProfitText;
 	private final String[] columns = new String[] { "Item", "BIN Price", "Paid", "Net" };
-	private String[][] data = new String[30][4];
+	private String[][] data = new String[29][4];
 
 	private final Font font = new Font("Calibri", Font.BOLD, 15);
 
@@ -63,7 +64,7 @@ public class WindowBuilder {
 		totalInvestedText = new JLabel("Total Invested: 1,228,580,000");
 		totalInvestedText.setFont(font);
 
-		totalMadeText = new JLabel("Total Made: " + String.format("%,d", (1228580000 - netProfit)));
+		totalMadeText = new JLabel("Total Made: " + String.format("%,d", (1228580000 + netProfit)));
 		totalMadeText.setFont(font);
 
 		netProfitText = new JLabel("Net Profit: " + String.format("%,d", netProfit));
@@ -72,7 +73,7 @@ public class WindowBuilder {
 
 	public void updateText() {
 
-		totalMadeText.setText("Total Made: " + String.format("%,d", 1228580000 - netProfit));
+		totalMadeText.setText("Total Made: " + String.format("%,d", 1228580000 + netProfit));
 		netProfitText.setText("Net Profit: " + String.format("%,d", netProfit));
 	}
 
@@ -155,15 +156,33 @@ public class WindowBuilder {
 
 	}
 
+	private String compare(String oldString, int newBin) {
+
+		String returnString;
+		int old = Integer.parseInt(oldString.replaceAll(",", "").replace("    ↑", "").replace("    ↓", ""));
+
+		if (newBin > old) {
+			returnString = String.format("%,d", newBin) + "    ↑";
+			return returnString;
+		}
+
+		if (newBin < old) {
+			returnString = String.format("%,d", newBin) + "    ↓";
+			return returnString;
+		}
+
+		return String.format("%,d", newBin);
+	}
+
 	private void oneColumnBuilder(String[][] data) {
 
-		for (int i = 0; i < 30; i++)
+		for (int i = 0; i < 29; i++)
 			data[i][0] = itemNames.get(i);
 
 	}
 
 	private void twoColumnBuilder(String[][] data) {
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < 29; i++) {
 
 			data[i][1] = String.format("%,d", itemPrices.get(i));
 
@@ -174,9 +193,12 @@ public class WindowBuilder {
 
 	private void updateTwoColumn() {
 
-		for (int i = 0; i < 30; i++) {
+		String currentCell;
+		for (int i = 0; i < 29; i++) {
 
-			table.getModel().setValueAt(String.format("%,d", itemPrices.get(i)), i, 1);
+			currentCell = table.getModel().getValueAt(i, 1).toString();
+
+			table.getModel().setValueAt(compare(currentCell, itemPrices.get(i)), i, 1);
 
 			if (itemPrices.get(i) == 2147483647)
 				table.getModel().setValueAt("Not in Auction!", i, 1);
@@ -205,25 +227,24 @@ public class WindowBuilder {
 		data[18][2] = "48,000,000";
 		data[19][2] = "45,000,000";
 		data[20][2] = "40,800,000";
-		data[21][2] = "250,000,000";
-		data[22][2] = "45,000,000";
-		data[23][2] = "0";
-		data[24][2] = "31,000,000";
-		data[25][2] = "18,000,000";
-		data[26][2] = "35,000,000";
-		data[27][2] = "44,000,000";
-		data[28][2] = "55,000,000";
-		data[29][2] = "8,000,000";
+		data[21][2] = "45,000,000";
+		data[22][2] = "0";
+		data[23][2] = "31,000,000";
+		data[24][2] = "18,000,000";
+		data[25][2] = "35,000,000";
+		data[26][2] = "44,000,000";
+		data[27][2] = "55,000,000";
+		data[28][2] = "8,000,000";
 	}
 
 	private void fourColumnBuilder(String[][] data) {
 		netProfit = 0; // safety
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < 29; i++) {
 
 			if (data[i][1].equals("Not in Auction!")) {
 				continue;
 			}
-			int binPrice = Integer.parseInt(data[i][1].replaceAll(",", ""));
+			int binPrice = Integer.parseInt(data[i][1].replaceAll(",", "").replace("    ↑", "").replace("    ↓", ""));
 			int paidPrice = Integer.parseInt(data[i][2].replaceAll(",", ""));
 			data[i][3] = String.format("%,d", (binPrice - paidPrice));
 
@@ -234,13 +255,14 @@ public class WindowBuilder {
 
 	private void updateFourColumn() {
 		netProfit = 0;
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < 29; i++) {
 
 			if (table.getModel().getValueAt(i, 3) == null) {
 				continue;
 			}
-			int binPrice = Integer.parseInt(data[i][1].replaceAll(",", ""));
+			int binPrice = Integer.parseInt(data[i][1].replaceAll(",", "").replace("    ↑", "").replace("    ↓", ""));
 			int paidPrice = Integer.parseInt(data[i][2].replaceAll(",", ""));
+
 			table.getModel().setValueAt(String.format("%,d", (binPrice - paidPrice)), i, 3);
 
 			netProfit = netProfit + (binPrice - paidPrice);
